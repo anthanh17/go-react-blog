@@ -1,0 +1,11 @@
+[mysql]
+driver = "mysql"
+username = "hoainam"
+password = "123"
+name = "nam"
+host = "localhost"
+port = 3306
+source = "hoainam:12345678@tcp(localhost:3306)/testmysql"
+
+#DSN for database
+#db_username:db_password@protocol(address:port_num)/database_name
