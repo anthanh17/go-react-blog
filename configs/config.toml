@@ -1,10 +1,10 @@
 [mysql]
 host = "localhost"
 port = 3306
-user = "hoainam"
-password = "123"
-db-name = "nam"
-source = "hoainam:12345678@tcp(localhost:3306)/testmysql"
+user = "root"
+password = "123456789"
+db-name = "testmysql"
+source = "root:123456789@tcp(localhost:3306)/testmysql"
 
 #DSN for database
 #db_username:db_password@protocol(address:port_num)/database_name
