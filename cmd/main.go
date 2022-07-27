@@ -23,14 +23,6 @@ func showHelp() {
 	fmt.Println("     -h (show help info)")
 }
 
-func unmarshal(rawVal interface{}) bool {
-	if err := viper.Unmarshal(rawVal); err != nil {
-		fmt.Printf("config file %s loaded failed. %v\n", file, err)
-		return false
-	}
-	return true
-}
-
 func load() bool {
 	_, err := os.Stat(file)
 	if err != nil {
@@ -45,18 +37,18 @@ func load() bool {
 		return false
 	}
 
-	if !unmarshal(&conf) || !unmarshal(&config.Config{}) {
+	if err = viper.Unmarshal(&conf); err != nil {
 		fmt.Printf("Unable to decode into struct, %v", err)
-		return false
 	}
+
 	fmt.Printf("config %s load ok!\n", file)
 	// Reading variables using the model
 	fmt.Println("Reading variables using the model..")
 	fmt.Println("Database Host:\t", conf.MySQLConfig.Host)
 	fmt.Println("Database Port:\t", conf.MySQLConfig.Port)
-	fmt.Println("Database Db-name:\t\t", conf.MySQLConfig.DbName)
-	fmt.Println("Database username:\t", conf.MySQLConfig.User)
-	fmt.Println("Database password:\t\t", conf.MySQLConfig.Password)
+	fmt.Println("Database Db-name:", conf.MySQLConfig.DbName)
+	fmt.Println("Database username:", conf.MySQLConfig.User)
+	fmt.Println("Database password:", conf.MySQLConfig.Password)
 	return true
 }
 
