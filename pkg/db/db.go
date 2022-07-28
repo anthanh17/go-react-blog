@@ -25,14 +25,16 @@ func SetupConfig(cfg config.Config) {
 }
 
 func GetMySqlDatabase() (*gorm.DB, error) {
-	dns := fmt.Sprintf(
-		"%s:%s@(%s:3306)/%s?charset=utf8&parseTime=True&loc=Local",
+	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf(
+		"%s:%s@(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
 		MySQLConfig.User,
 		MySQLConfig.Password,
 		MySQLConfig.Host,
+		MySQLConfig.Port,
 		MySQLConfig.DbName)
 
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	// if err == nil {
 	// 	db.SetMaxOpenConns(10)
 	// 	db.SetMaxIdleConns(10)
