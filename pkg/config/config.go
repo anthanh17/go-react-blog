@@ -1,15 +1,18 @@
 package config
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	MySQLConfig *MySQLConfig `mapstructure:"mysql"`
+	MySQLConfig    *MySQLConfig    `mapstructure:"mysql"`
+	TelegramConfig *TelegramConfig `mapstructure:"telegram"`
 }
 
 type MySQLConfig struct {
@@ -20,9 +23,17 @@ type MySQLConfig struct {
 	DbName   string `mapstructure:"db-name"`
 }
 
+type TelegramConfig struct {
+	Token  string `mapstructure:"token"`
+	ChatId int64  `mapstructure:"chat-id"`
+	BotId  int64  `mapstructure:"bot-id"`
+}
+
 var (
-	conf Config
-	file string
+	conf        Config
+	file        string
+	MySqlCfg    *MySQLConfig
+	TelegramCfg *TelegramConfig
 )
 
 func showHelp() {
@@ -75,10 +86,25 @@ func parseFlag() bool {
 	return true
 }
 
-func LoadConfig() Config {
+func loadConfig() Config {
 	if !parseFlag() {
 		showHelp()
 		os.Exit(-1)
 	}
 	return conf
+}
+
+func SetupConfig() {
+	cfg := loadConfig()
+	if cfg.MySQLConfig == nil {
+		log.Fatal(errors.New(fmt.Sprintf("Can not load MySQL config!")))
+		return
+	}
+	MySqlCfg = cfg.MySQLConfig
+
+	if cfg.TelegramConfig == nil {
+		log.Fatal(errors.New(fmt.Sprintf("Can not load telegram config !")))
+		return
+	}
+	TelegramCfg = cfg.TelegramConfig
 }

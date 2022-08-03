@@ -4,7 +4,7 @@ port = 3306
 user = "root"
 password = "123456789"
 db-name = "testmysql"
-
-#source = "root:123456789@tcp(localhost:3306)/testmysql"
-#DSN for database
-#db_username:db_password@protocol(address:port_num)/database_name
+[telegram]
+token = "AAGintfd5Fu9raoCzDG4ik_vORZU8iyqZoo"
+chat-id = -683095680
+bot-id = 5567528408
