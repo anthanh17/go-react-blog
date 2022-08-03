@@ -20,14 +20,11 @@ func GetMySqlDatabase() (*gorm.DB, error) {
 		config.MySqlCfg.DbName)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	// if err == nil {
-	// 	db.SetMaxOpenConns(10)
-	// 	db.SetMaxIdleConns(10)
-	// 	err = db.Ping()
-	// } else
+
 	if err != nil {
 		fmt.Println("Error connecting to database : error=%v", err)
 		return nil, nil
 	}
+
 	return db, err
 }

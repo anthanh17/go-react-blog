@@ -1,0 +1,130 @@
+diff --git a/cmd/main.go b/cmd/main.go
+index 50a3da7..ace0671 100644
+--- a/cmd/main.go
++++ b/cmd/main.go
+@@ -9,6 +9,29 @@ import (
+ 	"github.com/anthanh17/go-react-blog/pkg/db/repository"
+ )
+ 
++type Post struct {
++	ID			uint64	`gorm:"primaryKey; AUTO_INCREMENT"`
++	title		string	`gorm:"size:255, not null; unique"`
++	content 	string	`gorm:"type:text"`
++	authorId	int 	`gorm:"type:tinyint unsigned"`
++}
++
++// func CreatePost(db *gorm.DB, Post *post) (err error) {
++// 	err = db.Create(post).Error
++// 	if err != nil {
++// 		return err
++// 	}
++// 	return nil
++// }
++
++// func CreateTable(t *TestTable) error {
++// 	if !gormDB.HasTable(t.TableName()) {
++// 		return gormDB.CreateTable(t)
++// 	}
++// 	return nil
++// }
++
++
+ func main() {
+ 	config := config.LoadConfig()
+ 
+@@ -20,4 +43,10 @@ func main() {
+ 	}
+ 
+ 	fmt.Println("Ping to database successful, connection is still alive")
++
++	// dB.AutoMigrate(&Post{})
++
++	// if err != nil {
++    //     panic(err)
++    // }
+ }
+diff --git a/configs/config.toml b/configs/config.toml
+index 74f7e97..74bb952 100644
+--- a/configs/config.toml
++++ b/configs/config.toml
+@@ -1,8 +1,8 @@
+ [mysql]
+ host = "localhost"
+ port = 3306
+-user = "root"
+-password = "123456789"
++user = "hoainam"
++password = "12345678"
+ db-name = "testmysql"
+ 
+ #source = "root:123456789@tcp(localhost:3306)/testmysql"
+diff --git a/pkg/db/db.go b/pkg/db/db.go
+index 6bc8911..c6757b2 100644
+--- a/pkg/db/db.go
++++ b/pkg/db/db.go
+@@ -24,6 +24,20 @@ func SetupConfig(cfg config.Config) {
+ 	MySQLConfig = cfg.MySQLConfig
+ }
+ 
++type Post struct {
++	// Id			uint64	`gorm:"primaryKey; AUTO_INCREMENT"`
++	// title		string	`gorm:"primaryKey;type:varchar(255), not null; unique"`
++	// content 	string	`gorm:"type:text"`
++	authorId	int 	`gorm:"primaryKey; AUTO_INCREMENT; type:tinyint unsigned"`
++}
++
++type message struct {
++    gorm.Model
++    Title string
++    Body  string `sql:"size:0"` // blob
++}
++
++
+ func GetMySqlDatabase() (*gorm.DB, error) {
+ 	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+ 	dsn := fmt.Sprintf(
+@@ -44,5 +58,12 @@ func GetMySqlDatabase() (*gorm.DB, error) {
+ 		fmt.Println("Error connecting to database : error=%v", err)
+ 		return nil, nil
+ 	}
++
++	db.AutoMigrate(&message{})
++
++	if err != nil {
++        panic(err)
++    }
++
+ 	return db, err
+-}
++} 
+diff --git a/pkg/db/models/posts.go b/pkg/db/models/posts.go
+index e69de29..731f7a4 100644
+--- a/pkg/db/models/posts.go
++++ b/pkg/db/models/posts.go
+@@ -0,0 +1,25 @@
++package models
++
++type Post struct {
++	Id			uint64	`gorm:"primaryKey; AUTO_INCREMENT"`
++	title		string	`gorm:"primaryKey;type:varchar(255), not null; unique"`
++	content 	string	`gorm:"type:text"`
++	authorId	int 	`gorm:type:tinyint unsigned`
++}
++
++func CreatePost(db *gorm.DB, Post *post) (err error) {
++	err = db.Create(post).Error
++	if err != nil {
++		return err
++	}
++	return nil
++}
++
++func CreateTable(t *TestTable) error {
++	if !gormDB.HasTable(t.TableName()) {
++		return gormDB.CreateTable(t)
++	}
++	return nil
++}
++
++func Create
+\ No newline at end of file
