@@ -8,7 +8,7 @@ type Post struct {
 	Id      	uint64       	`gorm:"primaryKey; AUTO_INCREMENT"`
 	Title		string       	`gorm:"type:varchar(255); not null; unique"`
 	Content 	string       	`gorm:"type:text"`
-	AuthorId	uint8
+	AuthorId	uint64
 	Media		string       	`gorm:"type:varchar(255); not null"`
 	Views		uint32
 	Likes		uint32
