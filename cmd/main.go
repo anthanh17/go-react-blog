@@ -13,11 +13,6 @@ import (
 func main() {
 	config.SetupConfig()
 
-	// err := repository.SetupDb()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	err := repository.SetupDb()
 	if err != nil {
 		log.Fatal(err)

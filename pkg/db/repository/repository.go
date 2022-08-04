@@ -21,7 +21,7 @@ func SetupDb() (err error) {
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	db.AutoMigrate(&models.Account{}, &models.Post{}, &models.PostCategory{}, &models.PostComment{})
+	db.AutoMigrate(&models.Account{}, &models.Post{}, &models.Categories{}, &models.PostComment{})
 
 	return
 }
