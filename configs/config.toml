@@ -1,8 +1,8 @@
 [mysql]
 host = "localhost"
 port = 3306
-user = "root"
-password = "123456789"
+user = "admin"
+password = "admin123"
 db-name = "testmysql"
 [telegram]
 token = "AAGintfd5Fu9raoCzDG4ik_vORZU8iyqZoo"
