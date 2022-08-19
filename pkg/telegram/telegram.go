@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/anthanh17/go-react-blog/pkg/config"
@@ -62,14 +63,14 @@ func SendMessage(message string, flag int) {
 	case 2:
 		emoji = "❌"
 	default:
-		//logger.Errorf("unknown level %d", flag)
+		log.Println("unknown level %d", flag)
 		return
 	}
 
 	go func() {
 		err := send(fmt.Sprintf("%s - %s", emoji, message))
 		if err != nil {
-			//logger.Errorf("Can not send message telegram: %s", err.Error())
+			log.Println("Can not send message telegram: %s", err.Error())
 		}
 	}()
 }
