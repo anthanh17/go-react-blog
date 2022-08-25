@@ -5,16 +5,13 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/anthanh17/go-react-blog/pkg/config"
 	"github.com/anthanh17/go-react-blog/pkg/db"
 	"github.com/anthanh17/go-react-blog/pkg/db/models"
 )
 
-var DB *gorm.DB
-
-func SetupDb() (*gorm.DB, error) {
-	db, err := db.GetMySqlDatabase()
-
-	DB = db
+func SetupDb(config config.Settings) (*gorm.DB, error) {
+	db, err := db.GetMySqlDatabase(config)
 
 	sqlDB, err := db.DB()
 

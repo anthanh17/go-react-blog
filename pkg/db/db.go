@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetMySqlDatabase() (*gorm.DB, error) {
+func GetMySqlDatabase(config config.Settings) (*gorm.DB, error) {
 	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
 	dsn := fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
@@ -22,7 +22,7 @@ func GetMySqlDatabase() (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println("Error connecting to database : error=%v", err)
+		//fmt.Println("Error connecting to database : error=%v", err)
 		return nil, nil
 	}
 

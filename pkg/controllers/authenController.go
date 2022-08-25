@@ -5,15 +5,25 @@ import (
 	"time"
 
 	"github.com/anthanh17/go-react-blog/pkg/db/models"
-	"github.com/anthanh17/go-react-blog/pkg/db/repository"
 	"github.com/dgrijaLva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 const SecretKey = "secret"
 
-func Register(c *fiber.Ctx) error {
+type Handler struct {
+	db *gorm.DB
+}
+
+func NewHandler(db *gorm.DB) *Handler {
+	return &Handler{
+		db: db,
+	}
+}
+
+func (h *Handler) Register(c *fiber.Ctx) error {
 	data := make(map[string]string)
 
 	if err := c.BodyParser(&data); err != nil {
@@ -25,11 +35,11 @@ func Register(c *fiber.Ctx) error {
 		Email:    data["email"],
 		Password: passWd,
 	}
-	repository.DB.Create(&user)
+	h.db.Create(&user)
 	return c.JSON(user)
 }
 
-func Login(c *fiber.Ctx) error {
+func (h *Handler) Login(c *fiber.Ctx) error {
 	data := make(map[string]string)
 
 	if err := c.BodyParser(&data); err != nil {
@@ -38,7 +48,7 @@ func Login(c *fiber.Ctx) error {
 
 	// data in database check email -> user
 	var user models.User
-	repository.DB.Where("email = ?", data["email"]).First(&user)
+	h.db.Where("email = ?", data["email"]).First(&user)
 	if user.Id == 0 {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
@@ -83,7 +93,7 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-func User(c *fiber.Ctx) error {
+func (h *Handler) User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -101,7 +111,7 @@ func User(c *fiber.Ctx) error {
 
 	var user models.User
 
-	repository.DB.Where("id = ?", claims.Issuer).First(&user)
+	h.db.Where("id = ?", claims.Issuer).First(&user)
 
 	return c.JSON(user)
 }

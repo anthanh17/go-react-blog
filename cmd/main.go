@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/anthanh17/go-react-blog/pkg/config"
+	"github.com/anthanh17/go-react-blog/pkg/controllers"
 	"github.com/anthanh17/go-react-blog/pkg/db/repository"
 	"github.com/anthanh17/go-react-blog/pkg/routes"
 	"github.com/gofiber/fiber/v2"
@@ -11,9 +12,13 @@ import (
 )
 
 func main() {
-	config.SetupConfig()
+	settings, error := config.LoadConfig()
+	if error != nil {
+		log.Fatal("not load config", error)
+		panic(error)
+	}
 
-	_, err := repository.SetupDb()
+	db, err := repository.SetupDb(settings)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,8 +27,8 @@ func main() {
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 	}))
-
-	routes.Setup(app)
+	handler := controllers.NewHandler(db)
+	routes.Setup(app, handler)
 
 	app.Listen(":8000")
 

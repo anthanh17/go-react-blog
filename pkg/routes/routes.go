@@ -5,9 +5,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Setup(app *fiber.App) {
-	app.Post("/api/register", controllers.Register)
-	app.Post("/api/login", controllers.Login)
-	app.Get("/api/user", controllers.User)
-	app.Post("/api/logout", controllers.Logout)
+func Setup(app *fiber.App, handler *controllers.Handler) {
+	app.Post("/api/register", handler.Register)
+	app.Post("/api/login", handler.Login)
+	app.Get("/api/user", handler.User)
+	app.Post("/api/logout", handler.Logout)
 }

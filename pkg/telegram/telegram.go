@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/anthanh17/go-react-blog/pkg/config"
-	//"github.com/anthanh17/go-react-blog/pkg/logger"
 )
 
 type sendMessageReqBody struct {
