@@ -9,7 +9,7 @@ import (
 type Account struct {
 	Id      	uint64   	`gorm:"primaryKey; AUTO_INCREMENT"`
 	Username	string   	`gorm:"type:varchar(255); not null; unique"`
-	Password 	string   	`gorm:"type:varchar(255); not null"`
+	Password 	[]byte   	`gorm:"type:varchar(255); not null"`
 	FullName	string   	`gorm:"type:varchar(255); not null"`
 	Email		string   	`gorm:"type:varchar(255)"`
 	Telephone	string   	`gorm:"type:varchar(255)"`
