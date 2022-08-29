@@ -1,0 +1,49 @@
+/*This is only used for testing gorm api/
+
+/*testing constructor for creating mysqlstorage*/
+	var mysql *storage.MysqlStorage
+
+	mysql = storage.NewMySqlStorage(db);
+
+	/*Sample data for testing database*/
+	account := models.Account{Username :"NamHN", Password:"123", FullName : "NamNH", Subscribe: true, Mask: false, LastLogin : time.Now()}
+	post := models.Post{Title : "backend", Content : "First post", AuthorId: 1, Views: 1, Mask: false}
+	comment := models.Comment{ParentCommentId: 0, AccountCommentId: 1, PostId: 1, Content: "Good article"}
+	category := models.Category{Name: "backend"}
+	// post_category := models.PostCategory{PostId: 1, CategoryId: 1}
+
+	var acc_res *models.Account
+	var post_res *models.Post
+	var comment_res *models.Comment
+	var category_res *models.Category;
+	// var post_cate_res *models.Category;
+
+	/*Create record in database with sample data. Should only create one time*/
+	mysql.CreateAccount(&account)
+	mysql.CreatePost(&post)
+	mysql.CreateComment(&comment)
+	mysql.CreateCategory(&category)
+	mysql.CreatePostCategory(&post, &category)
+
+	acc_res, _ = mysql.FindAccount(map[string]interface{}{"Id": 1})
+	a_res, _ := json.Marshal(acc_res)
+	fmt.Println(string(a_res))
+
+	a_bool := mysql.DeleteAccount(acc_res)
+	if a_bool == true {
+		acc_res, _ = mysql.FindAccount(map[string]interface{}{"Id": 1})
+		a_res, _ := json.Marshal(acc_res)
+		fmt.Println(string(a_res))
+	}
+
+	post_res, _ = mysql.FindPost(map[string]interface{}{"Id": 1, "author_id": 1, "Title": "backend"})
+	p_res, _ := json.Marshal(post_res)
+	fmt.Println(string(p_res))
+
+	comment_res, _ = mysql.FindComment(map[string]interface{}{"post_id": 1})
+	c_res, _ := json.Marshal(comment_res)
+	fmt.Println(string(c_res))
+
+	category_res, _ = mysql.FindCategory(map[string]interface{}{"Id": 1})
+	cate_res, _ := json.Marshal(category_res)
+	fmt.Println(string(cate_res))

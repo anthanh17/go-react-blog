@@ -17,7 +17,7 @@ import (
 func main() {
 	config.SetupConfig()
 
-	err := repository.SetupDb()
+	_, err := repository.SetupDb()
 	if err != nil {
 		log.Fatal(err)
 	}
