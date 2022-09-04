@@ -2,6 +2,7 @@ package repository
 
 import (
 	"time"
+	"gorm.io/gorm"
 
 	"gorm.io/gorm"
 
@@ -23,7 +24,7 @@ func SetupDb(config config.Settings) (*gorm.DB, error) {
 
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
-
+				
 	db.AutoMigrate(&models.Account{}, &models.Post{}, &models.Category{}, &models.Comment{})
 
 	return db, err
