@@ -18,7 +18,7 @@ func main() {
 		panic(error)
 	}
 
-	db, err := repository.SetupDb(settings)
+	_, err := repository.SetupDb()
 	if err != nil {
 		log.Fatal(err)
 	}

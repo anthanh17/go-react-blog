@@ -4,8 +4,6 @@ import (
 	"time"
 	"gorm.io/gorm"
 
-	"gorm.io/gorm"
-
 	"github.com/anthanh17/go-react-blog/pkg/config"
 	"github.com/anthanh17/go-react-blog/pkg/db"
 	"github.com/anthanh17/go-react-blog/pkg/db/models"
