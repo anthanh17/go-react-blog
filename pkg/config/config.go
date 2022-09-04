@@ -29,12 +29,12 @@ type TelegramConfig struct {
 	BotId  int64  `mapstructure:"bot-id"`
 }
 
-var (
+type Settings struct {
 	conf        Config
 	file        string
 	MySqlCfg    *MySQLConfig
 	TelegramCfg *TelegramConfig
-)
+}
 
 func showHelp() {
 	fmt.Printf("Usage:%s {params}\n", os.Args[0])
@@ -42,69 +42,44 @@ func showHelp() {
 	fmt.Println("     -h (show help info)")
 }
 
-func load() bool {
-	_, err := os.Stat(file)
-	if err != nil {
-		return false
-	}
-
-	viper.SetConfigFile(file)
-	viper.SetConfigType("toml")
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("Error reading config file, %s", err)
-		return false
-	}
-
-	if err = viper.Unmarshal(&conf); err != nil {
-		fmt.Printf("Unable to decode into struct, %v", err)
-	}
-
-	fmt.Printf("config %s load ok!\n", file)
-	// Reading variables using the model
-	fmt.Println("Reading variables using the model..")
-	fmt.Println("Database Host:\t", conf.MySQLConfig.Host)
-	fmt.Println("Database Port:\t", conf.MySQLConfig.Port)
-	fmt.Println("Database Db-name:", conf.MySQLConfig.DbName)
-	fmt.Println("Database username:", conf.MySQLConfig.User)
-	fmt.Println("Database password:", conf.MySQLConfig.Password)
-	return true
-}
-
-func parseFlag() bool {
+func LoadConfig() (settings Settings, err error) {
+	// parse flag
+	var file string
 	flag.StringVar(&file, "c", "conf/conf.toml", "config file")
 	help := flag.Bool("h", false, "help info")
 	flag.Parse()
-	if !load() {
-		return false
-	}
-
 	if *help {
 		showHelp()
-		return false
 	}
-	return true
-}
 
-func loadConfig() Config {
-	if !parseFlag() {
-		showHelp()
-		os.Exit(-1)
+	// load file
+	if _, error := os.Stat(file); error != nil {
+		return
 	}
-	return conf
-}
+	viper.SetConfigFile(file)
+	viper.SetConfigType("toml")
 
-func SetupConfig() {
-	cfg := loadConfig()
-	if cfg.MySQLConfig == nil {
+	if err = viper.ReadInConfig(); err != nil {
+		fmt.Printf("Error reading config file, %s", err)
+		return
+	}
+
+	if err = viper.Unmarshal(&settings.conf); err != nil {
+		fmt.Printf("Unable to decode into struct, %v", err)
+		return
+	}
+
+	// Setup Config
+	if settings.conf.MySQLConfig == nil {
 		log.Fatal(errors.New(fmt.Sprintf("Can not load MySQL config!")))
 		return
 	}
-	MySqlCfg = cfg.MySQLConfig
+	settings.MySqlCfg = settings.conf.MySQLConfig
 
-	if cfg.TelegramConfig == nil {
+	if settings.conf.TelegramConfig == nil {
 		log.Fatal(errors.New(fmt.Sprintf("Can not load telegram config !")))
 		return
 	}
-	TelegramCfg = cfg.TelegramConfig
+	settings.TelegramCfg = settings.conf.TelegramConfig
+	return
 }
